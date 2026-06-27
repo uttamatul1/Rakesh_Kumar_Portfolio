@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface NavbarProps {
   navOpen: boolean;
@@ -7,29 +7,34 @@ interface NavbarProps {
   scrollToId: (id: string) => void;
 }
 
+const NAV_ITEMS = [
+  { id: 'about', label: 'About', icon: '🧑‍🔬' },
+  { id: 'journey', label: 'Journey', icon: '🛤️' },
+  { id: 'expertise', label: 'Expertise', icon: '🧪' },
+  { id: 'awards', label: 'Awards', icon: '🏆' },
+  { id: 'news', label: 'Media & News', icon: '📰' },
+  { id: 'contact', label: 'Contact', icon: '📬' },
+];
+
 export const Navbar: React.FC<NavbarProps> = ({
   navOpen,
   setNavOpen,
   solid,
   scrollToId
 }) => {
-  const navLinks = ['about', 'journey', 'expertise', 'awards', 'news', 'contact'];
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (navOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [navOpen]);
 
   const handleLinkClick = (id: string) => {
     scrollToId(id);
     setNavOpen(false);
-  };
-
-  const getLinkLabel = (id: string) => {
-    switch (id) {
-      case 'about': return 'About';
-      case 'journey': return 'Journey';
-      case 'expertise': return 'Expertise';
-      case 'awards': return 'Awards';
-      case 'news': return 'Media & News';
-      case 'contact': return 'Contact';
-      default: return id;
-    }
   };
 
   return (
@@ -39,39 +44,65 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="brand-dot">RK</div> Dr. Rakesh Kumar
         </button>
 
-        {/* Navigation Drawer Container */}
-        <ul className={`nav-links ${navOpen ? 'open' : ''}`}>
-          <button className="drawer-close" onClick={() => setNavOpen(false)} aria-label="Close menu">
-            <span className="close-line"></span>
-            <span className="close-line"></span>
-          </button>
-          
-          {navLinks.map((id) => (
+        {/* Desktop nav links — hidden on mobile via CSS */}
+        <ul className="nav-links-desktop">
+          {NAV_ITEMS.map(({ id, label }) => (
             <li key={id}>
               <button className="nav-link-btn" onClick={() => handleLinkClick(id)}>
-                {getLinkLabel(id)}
+                {label}
               </button>
             </li>
           ))}
-
-
         </ul>
 
-        {/* Backdrop overlay for mobile menu drawer */}
-        <div 
-          className={`nav-overlay ${navOpen ? 'open' : ''}`} 
-          onClick={() => setNavOpen(false)}
-        />
-
-        {/* Hamburger button visible on mobile when menu is closed */}
-        {!navOpen && (
-          <button className="hamburger" onClick={() => setNavOpen(true)} aria-label="Open menu">
-            <span className="hamburger-bar"></span>
-            <span className="hamburger-bar"></span>
-            <span className="hamburger-bar"></span>
-          </button>
-        )}
+        {/* Hamburger button — visible only on mobile */}
+        <button
+          className="hamburger"
+          onClick={() => setNavOpen(true)}
+          aria-label="Open menu"
+        >
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+          <span className="hamburger-bar" />
+        </button>
       </nav>
+
+      {/* Mobile Drawer Overlay */}
+      <div
+        className={`drawer-overlay ${navOpen ? 'open' : ''}`}
+        onClick={() => setNavOpen(false)}
+      />
+
+      {/* Mobile Drawer Panel */}
+      <aside className={`drawer ${navOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <div className="drawer-brand">
+            <div className="brand-dot">RK</div>
+            <span>Navigation</span>
+          </div>
+          <button className="drawer-close" onClick={() => setNavOpen(false)} aria-label="Close menu">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="1" y1="1" x2="17" y2="17" />
+              <line x1="17" y1="1" x2="1" y2="17" />
+            </svg>
+          </button>
+        </div>
+
+        <ul className="drawer-links">
+          {NAV_ITEMS.map(({ id, label, icon }) => (
+            <li key={id}>
+              <button className="drawer-link" onClick={() => handleLinkClick(id)}>
+                <span className="drawer-link-icon">{icon}</span>
+                <span className="drawer-link-label">{label}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <div className="drawer-footer">
+          <p>🌱 "Science for a greener, cleaner India."</p>
+        </div>
+      </aside>
     </>
   );
 };

@@ -10,6 +10,7 @@ import { Awards } from './components/Awards';
 import { MediaNews } from './components/MediaNews';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { FactsTicker } from './components/FactsTicker';
 import { Modal } from './components/Modal';
 
 export const App: React.FC = () => {
@@ -101,6 +102,8 @@ export const App: React.FC = () => {
 
       {/* Main content sections */}
       <Hero scrollToId={scrollToId} />
+
+      <FactsTicker />
 
       <StatsBand addReveal={addReveal} />
 

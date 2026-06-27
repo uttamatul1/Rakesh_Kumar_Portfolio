@@ -57,7 +57,7 @@ export const Contact: React.FC<ContactProps> = ({
                       rel="noopener noreferrer"
                       className="clickable-link"
                     >
-                      https://www.linkedin.com/in/rakesh-kumar-3478074?utm_source=share_via&utm_content=profile&utm_medium=member_android
+                      linkedin.com/in/rakeshkumar-3478074
                     </a>
                   </p>
                 </div>
